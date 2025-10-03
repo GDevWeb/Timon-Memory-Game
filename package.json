@@ -1,0 +1,29 @@
+{
+  "name": "timon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec \"ts-node --transpile-only\" src/app.ts",
+    "build": "tsc",
+    "deploy": "gh-pages -d ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@types/nodemon": "^1.19.6",
+    "dotenv": "^17.2.2",
+    "ejs": "^3.1.10"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "gh-pages": "^6.3.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
+}
