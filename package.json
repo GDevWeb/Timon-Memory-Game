@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec \"ts-node --transpile-only\" src/app.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "deploy": "gh-pages -d ."
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.3.1",
+    "gh-pages": "^6.3.0",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",

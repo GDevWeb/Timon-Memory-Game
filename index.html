@@ -3,15 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="dist/app.js"></script>
+    <meta name="description" content="A Simon-like game called Timon" />
+    <meta name="author" content="Gaëtan Dammaretz" />
+    <meta property="og:title" content="Timon" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://timon.com" />
+    <meta property="og:image" content="https://timon.com/image.jpg" />
+    <meta property="og:description" content="A Simon-like game called Timon" />
+    <meta property="og:site_name" content="Timon" />
     <link rel="stylesheet" href="./public/css/styles.css" />
+    <link rel="icon" type="image/svg+xml" href="/public/icons/icon.ico" />
+    <script type="module" src="./app.js"></script>
+
     <title>Timon</title>
   </head>
   <body>
+    <header>
+      <h1>Timon</h1>
+    </header>
     <main>
-      <section id="text">
-        <h1>Timon</h1>
-        <p>Don't look, it's Timon for the copyright 😆</p>
+      <section id="introduction">
+        <!-- <img src="./public/images/icon.png" alt="Timon logo" class="logo" /> -->
+        <h2>Don't look, it's Timon for the copyright 😆</h2>
       </section>
       <section>
         <div class="level"></div>
@@ -28,5 +41,23 @@
         </div>
       </div>
     </main>
+    <footer>
+      <p>&copy; 2023 Timon. All rights reserved.</p>
+      <ul>
+        <li>
+          Github: <a href="https://github.com/GDevWeb" target="_blank" rel="noopener" class="github-link">GDevWeb</a>
+        </li>
+        <li>
+          Linkedin:
+          <a
+            href="https://www.linkedin.com/in/ga%C3%ABtan-dammaretz/"
+            target="_blank"
+            rel="noopener"
+            class="github-link""
+          >Gaëtan Dammaretz</a
+          >
+        </li>
+      </ul>
+    </footer>
   </body>
 </html>
