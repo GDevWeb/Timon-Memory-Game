@@ -1,151 +1,119 @@
-// DOM elements
-const padGreen = document.querySelector(".pad.green") as HTMLElement | null;
-const padRed = document.querySelector(".pad.red") as HTMLElement | null;
-const padBlue = document.querySelector(".pad.blue") as HTMLElement | null;
-const padYellow = document.querySelector(".pad.yellow") as HTMLElement | null;
-const startButton = document.querySelector(
-  "#start-button"
-) as HTMLButtonElement | null;
-const levelDisplay = document.querySelector(".level") as HTMLElement | null;
+import { StatsModal } from "./components/StatsModal";
+import { SimonGame } from "./game";
+import { GameStorage } from "./gameStorage";
+import { Toast } from "./toast";
+import { GameElements } from "./types/game";
+import { GameAnalytics } from "./utils/analytics";
+import { DOMHelpers } from "./utils/domHelpers";
 
-// Game variables
-let sequence: string[] = [];
-let playerSequence: string[] = [];
-let level: number = 0;
-let isStrict: boolean = false;
-let turn: number = 0;
-let maxLevel: number = 20;
+/**
+ * Initializes the game by setting up elements, storage, analytics, and event listeners.
+ * This is the entry point for the game application.
+ */
+function initializeGameElements(): GameElements {
+  const highScoreDisplay = DOMHelpers.createElement("div", {
+    classes: ["high-score"],
+  });
+  document.querySelector("main")?.prepend(highScoreDisplay);
 
-// Sound files
-const soundFiles: { [key: string]: string } = {
-  green: "https://s3.amazonaws.com/freecodecamp/simonSound1.mp3",
-  red: "https://s3.amazonaws.com/freecodecamp/simonSound2.mp3",
-  blue: "https://s3.amazonaws.com/freecodecamp/simonSound3.mp3",
-  yellow: "https://s3.amazonaws.com/freecodecamp/simonSound4.mp3",
-};
-
-// Function to play sound
-function playSound(color: string) {
-  const audio = new Audio(soundFiles[color]);
-  audio.play();
+  return {
+    padGreen: DOMHelpers.querySelector<HTMLElement>(".pad.green"),
+    padRed: DOMHelpers.querySelector<HTMLElement>(".pad.red"),
+    padBlue: DOMHelpers.querySelector<HTMLElement>(".pad.blue"),
+    padYellow: DOMHelpers.querySelector<HTMLElement>(".pad.yellow"),
+    startButton: DOMHelpers.querySelector<HTMLButtonElement>("#start-button"),
+    levelDisplay: DOMHelpers.querySelector<HTMLElement>(".level"),
+    highScoreDisplay,
+  };
 }
 
-// Function to flash pad
-function flashPad(pad: HTMLElement) {
-  pad.classList.add("active");
-  setTimeout(() => {
-    pad.classList.remove("active");
-  }, 300);
-}
-// Function to generate random color
-function getRandomColor(): string {
-  const colors = ["green", "red", "blue", "yellow"];
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  return colors[randomIndex];
+function createStatsButton(statsModal: StatsModal): void {
+  const statsButton = DOMHelpers.createElement("button", {
+    classes: ["stats-button"],
+    attributes: {
+      "aria-label": "View Statistics",
+      title: "View your game statistics",
+    },
+    textContent: "📊",
+  });
+
+  statsButton.addEventListener("click", () => statsModal.show());
+  document.body.appendChild(statsButton);
 }
 
-// Function to start the game
-function startGame() {
-  sequence = [];
-  playerSequence = [];
-  level = 1; // Start at level 1
-  if (levelDisplay) {
-    levelDisplay.textContent = `Level: ${level}`;
-  }
-  turn = 0;
-  if (startButton) {
-    startButton.textContent = "Restart";
-  }
-  nextLevel();
-}
-
-// Function to advance to the next level
-function nextLevel() {
-  level++;
-  // levelDisplay.textContent = `Level: ${level}`;
-  if (levelDisplay) {
-    levelDisplay.textContent = `Level: ${level}`;
-  }
-  playerSequence = [];
-  const newColor = getRandomColor();
-  sequence.push(newColor);
-  playSequence();
-}
-
-// Function to play the sequence
-function playSequence() {
-  let i = 0;
-  const interval = setInterval(() => {
-    const color = sequence[i];
-    const pad = document.querySelector(`.pad.${color}`) as HTMLElement;
-    if (pad) {
-      flashPad(pad);
+function setupKeyboardShortcuts(game: SimonGame, statsModal: StatsModal): void {
+  document.addEventListener("keydown", (event) => {
+    switch (event.key.toLowerCase()) {
+      case "s":
+        if (event.ctrlKey || event.metaKey) {
+          event.preventDefault();
+          statsModal.show();
+        }
+        break;
+      case "escape":
+        statsModal.hide();
+        break;
+      case " ":
+        event.preventDefault();
+        const startButton =
+          DOMHelpers.querySelector<HTMLButtonElement>("#start-button");
+        startButton?.click();
+        break;
     }
-    playSound(color);
-    i++;
-    if (i >= sequence.length) {
-      clearInterval(interval);
-    }
-  }, 800);
+  });
 }
 
-// Function to handle player input
-function handlePadClick(event: Event) {
-  const clickedPad = event.target as HTMLElement;
-  const color = Array.from(clickedPad.classList).find((cls) => cls !== "pad");
+function showWelcomeMessage(analytics: GameAnalytics, toast: Toast): void {
+  const stats = analytics.getStats();
 
-  if (!color) return;
-
-  playerSequence.push(color);
-  flashPad(clickedPad);
-  playSound(color);
-
-  checkPlayerSequence();
-}
-
-// Function to check player's sequence against the game sequence
-function checkPlayerSequence() {
-  const currentMove = playerSequence.length - 1;
-
-  if (playerSequence[currentMove] !== sequence[currentMove]) {
-    // Incorrect move
-    if (isStrict) {
-      alert("Game Over! Starting a new game.");
-      startGame();
-    } else {
-      alert("Wrong move! Try again.");
-      playerSequence = [];
-      playSequence();
-    }
-    return;
-  }
-
-  if (playerSequence.length === sequence.length) {
-    // Correct sequence for the level
-    if (level === maxLevel) {
-      alert("Congratulations! You won the game!");
-      startGame();
-      return;
-    }
+  if (stats.gamesPlayed === 0) {
     setTimeout(() => {
-      nextLevel();
+      toast.info(
+        "👋 Welcome to Timon! Press Start or Spacebar to begin.",
+        5000
+      );
     }, 1000);
   }
 }
 
-// Event Listeners
-if (startButton) {
-  startButton.addEventListener("click", startGame);
+function main(): void {
+  const toast = new Toast();
+  const gameStorage = new GameStorage();
+  const analytics = new GameAnalytics();
+
+  const elements = initializeGameElements();
+
+  const statsModal = new StatsModal(analytics);
+
+  const game = new SimonGame(elements, gameStorage, toast, {
+    maxLevel: 20,
+    sequenceDelay: 800,
+    flashDuration: 300,
+  });
+
+  createStatsButton(statsModal);
+
+  setupKeyboardShortcuts(game, statsModal);
+
+  showWelcomeMessage(analytics, toast);
+
+  if (import.meta.env.DEV) {
+    (window as any).__TIMON_DEBUG__ = {
+      game,
+      analytics,
+      storage: gameStorage,
+      toast,
+      statsModal,
+    };
+    console.log(
+      "🎮 Debug mode enabled. Access game via window.__TIMON_DEBUG__"
+    );
+  }
 }
-if (padGreen) {
-  padGreen.addEventListener("click", handlePadClick);
-}
-if (padRed) {
-  padRed.addEventListener("click", handlePadClick);
-}
-if (padBlue) {
-  padBlue.addEventListener("click", handlePadClick);
-}
-if (padYellow) {
-  padYellow.addEventListener("click", handlePadClick);
+
+// Démarrer l'application quand le DOM est prêt
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", main);
+} else {
+  main();
 }
