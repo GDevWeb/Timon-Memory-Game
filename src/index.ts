@@ -6,6 +6,10 @@ import { GameElements } from "./types/game";
 import { GameAnalytics } from "./utils/analytics";
 import { DOMHelpers } from "./utils/domHelpers";
 
+/**
+ * Initializes the game by setting up elements, storage, analytics, and event listeners.
+ * This is the entry point for the game application.
+ */
 function initializeGameElements(): GameElements {
   const highScoreDisplay = DOMHelpers.createElement("div", {
     classes: ["high-score"],

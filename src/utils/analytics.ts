@@ -1,10 +1,4 @@
-export interface GameStats {
-  gamesPlayed: number;
-  gamesWon: number;
-  highestLevel: number;
-  totalTime: number;
-  averageLevel: number;
-}
+import { GameStats } from "../types/gamestats.types";
 
 export class GameAnalytics {
   private storageKey = "timon_analytics";

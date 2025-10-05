@@ -1,6 +1,9 @@
 import { GameAnalytics } from "../utils/analytics";
 import { DOMHelpers } from "../utils/domHelpers";
 
+/**
+ * Manages the display and functionality of the game statistics modal.
+ */
 export class StatsModal {
   private modal: HTMLDivElement;
   private analytics: GameAnalytics;
