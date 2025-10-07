@@ -6,19 +6,20 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@types/nodemon": "^1.19.6",
-    "nodemon": "^3.1.10",
-    "typescript": "^5.9.3"
+    "nodemon": "^3.1.10"
   },
   "devDependencies": {
     "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
     "vite": "^7.1.9"
   }
 }
