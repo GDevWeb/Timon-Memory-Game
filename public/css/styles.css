@@ -499,8 +499,10 @@ footer li:hover::before {
   padding: 2rem;
   max-width: 600px;
   width: 90%;
+  max-height: 90vh; /*071025 - hotfix for mobile device*/
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   animation: modalSlideIn 0.3s ease-out;
+  overflow: scroll;
 }
 
 @keyframes modalSlideIn {
