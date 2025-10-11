@@ -30,7 +30,7 @@ export class SimonGame {
     this.soundManager = new SoundManager();
 
     this.config = {
-      maxLevel: config.maxLevel || 20,
+      maxLevel: config.maxLevel || 40,
       sequenceDelay: config.sequenceDelay || 800,
       flashDuration: config.flashDuration || 300,
     };
